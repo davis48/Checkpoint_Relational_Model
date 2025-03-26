@@ -1,0 +1,79 @@
+--------------------------------------------------
+-- Table HOTEL
+--------------------------------------------------
+CREATE TABLE Hotel (
+    Hotel_Id    NUMBER       NOT NULL,
+    Hotel_Name  VARCHAR2(50) NOT NULL,
+    CONSTRAINT pk_hotel PRIMARY KEY (Hotel_Id)
+);
+
+--------------------------------------------------
+-- Table EMPLOYEE
+--------------------------------------------------
+CREATE TABLE Employee (
+    Employee_Id         NUMBER       NOT NULL,
+    Employee_Name       VARCHAR2(50) NOT NULL,
+    Employee_Specialty  VARCHAR2(50),
+    Leader_Id           NUMBER,
+    CONSTRAINT pk_employee PRIMARY KEY (Employee_Id),
+    CONSTRAINT fk_leader
+        FOREIGN KEY (Leader_Id)
+        REFERENCES Employee(Employee_Id),
+    CONSTRAINT uq_leader UNIQUE (Leader_Id)
+);
+
+--------------------------------------------------
+-- Table TYPE
+--------------------------------------------------
+CREATE TABLE Type (
+    Type_Id    NUMBER        NOT NULL,
+    Type_Name  VARCHAR2(50)  NOT NULL,
+    CONSTRAINT pk_type PRIMARY KEY (Type_Id)
+);
+
+--------------------------------------------------
+-- Table CATEGORY
+--------------------------------------------------
+CREATE TABLE Category (
+    Category_Id    NUMBER        NOT NULL,
+    Category_Name  VARCHAR2(50)  NOT NULL,
+    Price          NUMBER(9,2),
+    Beds_numbers   NUMBER,
+    CONSTRAINT pk_category PRIMARY KEY (Category_Id)
+);
+
+--------------------------------------------------
+-- Table ROOM
+--------------------------------------------------
+CREATE TABLE Room (
+    Room_Id       NUMBER        NOT NULL,
+    Floor         NUMBER,
+    Hotel_Id      NUMBER        NOT NULL,
+    Type_Id       NUMBER        NOT NULL,
+    Category_Id   NUMBER        NOT NULL,
+    CONSTRAINT pk_room PRIMARY KEY (Room_Id),
+    CONSTRAINT fk_room_hotel
+        FOREIGN KEY (Hotel_Id)
+        REFERENCES Hotel(Hotel_Id),
+    CONSTRAINT fk_room_type
+        FOREIGN KEY (Type_Id)
+        REFERENCES Type(Type_Id),
+    CONSTRAINT fk_room_category
+        FOREIGN KEY (Category_Id)
+        REFERENCES Category(Category_Id)
+);
+
+--------------------------------------------------
+-- Table WORKS (relation M:N Hotel-Employee)
+--------------------------------------------------
+CREATE TABLE Works (
+    Hotel_Id    NUMBER NOT NULL,
+    Employee_Id NUMBER NOT NULL,
+    CONSTRAINT pk_works PRIMARY KEY (Hotel_Id, Employee_Id),
+    CONSTRAINT fk_works_hotel
+        FOREIGN KEY (Hotel_Id)
+        REFERENCES Hotel(Hotel_Id),
+    CONSTRAINT fk_works_employee
+        FOREIGN KEY (Employee_Id)
+        REFERENCES Employee(Employee_Id)
+);
